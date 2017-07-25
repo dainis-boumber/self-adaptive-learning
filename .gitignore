@@ -1,5 +1,7 @@
 .pyc
-__pycache
+*/__pycache__
 .png
 .jpg
 .idea
+.zip
+.tar.gz
