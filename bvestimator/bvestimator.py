@@ -89,9 +89,9 @@ class BVEstimator:
             if error[i] > 0:
                 wi = err_val.count(central_tendency[i]) * 0.1
                 U = (wi - T[y[i]])
+                variance[i] = wi * (1 - wi) / (N - 1)
+                bias[i] = U**2 - variance[i]
 
-                bias[i] = U**2 - wi*(1-wi)/(N-1)
-                variance[i] = error[i] - bias[i]
                 print('bias %f variance %f error %f' % (bias[i], variance[i], error[i]))
                 if (bias[i] > 0 or variance[i] > 0):
                     Xx.append(X[i, 0])
@@ -100,8 +100,6 @@ class BVEstimator:
                         bv.append(0)
                     else:#variance error more common and difficult favor it
                         bv.append(1)
-        mu_bias = np.mean(bias)
-        mu_variance = np.mean(variance)
             #    ax.annotate(str(bias[i]) + ',' + str(variance[i]), (X[i, 0], X[i, 1]))
 
         ax = plt.subplot2grid((1, 3), (0, 1))
@@ -118,7 +116,7 @@ class BVEstimator:
         ax.set(aspect="equal",
                xlabel="$X_1$", ylabel="$X_2$")
 
-        ax.set_title('Bias=' + str(mu_bias) + ' Var=' + str(mu_variance))
+        ax.set_title('Error causes')
         ax.set_xlim(xx.min(), xx.max())
         ax.set_ylim(yy.min(), yy.max())
         ax.set_xticks(())
