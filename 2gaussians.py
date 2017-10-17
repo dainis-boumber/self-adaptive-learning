@@ -91,7 +91,12 @@ def interpolate_to_get_Px(D1, D2, Px_d1_c1, Px_d2_c2, x, py):
 def compute_bayes(pxc, py, px):
 	return pxc*py/px
 
-
+def combine2ds(Xy1, Xy2):
+    X1, y1 = Xy1
+    X2, y2 = Xy2
+    X=np.row_stack((X1, X2))
+    y=np.hstack((y1,y2))
+    return X, y
 
 def main():
     '''
@@ -102,15 +107,12 @@ def main():
                         scale=1.0, shuffle=True,random_state=None)
     '''
     #X, y = ds.make_circles()
-    X, y = ds.make_classification(n_samples=100, n_features=2, n_informative=2, n_redundant=0,
-                                  n_repeated=0, n_classes=2, n_clusters_per_class=2,
-                                  weights=None, flip_y=0.01, class_sep=2.0, hypercube=True, shift=0.31,
-                                  scale=1.0, shuffle=True, random_state=None)
-    #X1, y1 = ds.make_circles()
-    #X2, y2 = ds.make_moons()
-
-    #X=np.row_stack((X, X1, X2))
-    #y = np.hstack((y, y1,y2))
+    #X, y = ds.make_classification(n_samples=100, n_features=2, n_informative=2, n_redundant=0,
+    #                              n_repeated=0, n_classes=2, n_clusters_per_class=2,
+    #                              weights=None, flip_y=0.01, class_sep=2.0, hypercube=True, shift=0.31,
+    #                              scale=1.0, shuffle=True, random_state=None)
+    #X, y = ds.make_hastie_10_2()
+    #X, y = combine2ds(ds.make_circles(), ds.make_moons())
     #   X, y = ds.make_checkerboard((3, 3), 2)
     #X2, y2 = ds.make_blobs(n_samples=100, n_features=2, centers=2, cluster_std=0.33)
     #X3, y3, = ds.make_classification(n_samples=100, n_features=2, n_informative=2, n_redundant=0,
@@ -121,7 +123,13 @@ def main():
     #y = np.hstack((y1,y2,y3))
     #X, y = ds.load_breast_cancer(True)\
     #X, y = ds.make_blobs(n_samples=10, n_features=2, centers=2, cluster_std=0.33)
-
+    X, y = ds.make_hastie_10_2()
+    for i, item in enumerate(y):
+        if item < 0:
+            y[i]=0
+        else:
+            y[i]=1
+    y = y.astype(int)
     est = BVEstimator()
     est.estimate(X, y, LogisticRegression())
     #https://pdfs.semanticscholar.org/48e0/27a29968eb27e31029999f187eb63510255f.pdf
